@@ -2,34 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Mock 5: Deceptive Transparent Clickjacking Overlay</title>
+  <title>Mock 10: High-Frequency Benign SPA Mutations</title>
   <style>
-    body { font-family: sans-serif; padding: 2rem; position: relative; }
-    .underlying-btn { padding: 12px 24px; font-size: 16px; background: #22c55e; color: white; border: none; border-radius: 4px; }
-    /* Malicious transparent overlay hovering over legitimate button */
-    .clickjack-overlay {
-      position: absolute;
-      top: 70px;
-      left: 32px;
-      width: 140px;
-      height: 48px;
-      opacity: 0.01;
-      background: red;
-      z-index: 9999;
-      cursor: pointer;
-    }
+    body { font-family: sans-serif; padding: 2rem; }
+    #item-list { max-height: 300px; overflow-y: auto; border: 1px solid #e2e8f0; padding: 1rem; }
+    .item { padding: 4px 8px; margin: 2px 0; background: #f8fafc; border-radius: 4px; font-size: 13px; }
   </style>
 </head>
 <body>
-  <h2>Clickjacking UI Redressing Test</h2>
-  <p>Legitimate button has a near-transparent element overlaid directly above it.</p>
+  <h2>Single Page Application High-Frequency Feed Simulation</h2>
+  <p>Generates rapid non-sensitive DOM mutations (500 items) to stress test debouncing and observer CPU efficiency.</p>
   
-  <button class="underlying-btn" id="real-btn">Download PDF</button>
-  <div class="clickjack-overlay" id="hijack-layer" title="Adversary Trap"></div>
+  <button id="start-bench-btn">Start Mutation Burst</button>
+  <span id="bench-status" style="margin-left: 1rem; font-weight: bold;"></span>
+  <div id="item-list"></div>
 
   <script>
-    document.getElementById('hijack-layer').addEventListener('click', () => {
-      console.warn('[Attack] User click hijacked by transparent overlay!');
+    document.getElementById('start-bench-btn').addEventListener('click', () => {
+      const list = document.getElementById('item-list');
+      const status = document.getElementById('bench-status');
+      status.textContent = 'Generating 500 DOM updates...';
+      const t0 = performance.now();
+
+      for (let i = 1; i <= 500; i++) {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.textContent = `Notification #${i}: Status update at ${Date.now()}`;
+        list.appendChild(div);
+      }
+
+      const elapsed = (performance.now() - t0).toFixed(2);
+      status.textContent = `Finished 500 mutations in ${elapsed} ms without main thread lockup.`;
     });
   </script>
 </body>
